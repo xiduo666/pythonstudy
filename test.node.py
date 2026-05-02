@@ -1,6 +1,6 @@
 #单链表模板：实现单链表的增删改查
 class ListNode:  #创建节点
-    def __init__(self,val):
+    def __init__(self,val=0):
         self.val=val
         self.next=None
 
@@ -72,13 +72,24 @@ class LinkedList:
         while current:
             print(current.val,end='->')
             current=current.next
-        print('None')
+        print(None)
 
-def test():
-    c=LinkedList()
-    for i in range(10):
-        c.insert(i,i*i)
-    c.delete(3)
-    c.update(4,666)
-    c.display()
-test()
+c=LinkedList()
+for i in range(10):
+    c.insert(i,i*i)
+c.display()
+
+def get_fk(x:LinkedList,k:int)-> ListNode:
+    if k<=0:
+        return None
+    fast,slow=x.head,x.head
+    for _ in range(k):
+        if fast is None:
+            return None
+        fast=fast.next
+    while fast:
+        fast=fast.next
+        slow=slow.next
+    return slow
+
+print(get_fk(c,3).val)
