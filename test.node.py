@@ -1,95 +1,70 @@
-#单链表模板：实现单链表的增删改查
-class ListNode:  #创建节点
-    def __init__(self,val=0):
+
+#二叉树模板
+class TreeNode:
+    def __init__(self,val=None,left=None,right=None):
         self.val=val
-        self.next=None
+        self.left=left
+        self.t=right=right
 
-class LinkedList:
-    def __init__(self):
-        self.head=None
-        self.len=0
-    
-    def get_size(self):
-        return self.len
-    
-    def insert(self,pos,val):
-        if pos<0 or pos>self.get_size():
-            raise ValueError('Invalid position')
-        NewList=ListNode(val)
-        if pos==0:
-            NewList.next=self.head
-            self.head=NewList
-        else:
-            prev=self.head
-            for _ in range(pos-1):
-                prev=prev.next
-            NewList.next=prev.next
-            prev.next=NewList
-        self.len+=1
-    
-    def delete(self,pos):
-        if pos<0 or pos>self.len:
-            raise ValueError('Invalid position')
-        if pos==0:
-            self.head=self.head.next
-        else:
-            prev=self.head
-            for _ in range(pos-1):
-                prev=prev.next
-            prev.next=prev.next.next
-        self.len-=1
+class Tree:
+    def __init__(self,maxnode):
+        self.root=None
+        self.nodes=[TreeNode() for _ in range(maxnode)]
+        self.treesize=maxnode
 
-    def update(self,pos,newval):
-        if pos<0 or pos>self.len:
-            raise ValueError('Invalid position')
-        current=self.head
-        for _ in range(pos):
-            current=current.next
-        current.val=newval
+    def GetTreeNode(self,id):
+        return self.nodes[id]
     
-    def search(self,val):
-        current=self.head
-        pos=0
-        while current.val!=val and pos<self.len:
-            current=current.next
-            pos+=1
-        if current.val==val:
-            return current
-        return None
+    def visit(self,node):
+        print(node.val,end=' ')
     
-    def index(self,val):
-        current=self.head
-        pos=0
-        while current.val!=val and pos<self.len:
-            pos+=1
-            current=current.next
-        if current.val==val:
-            return pos
-        return -1
-    
-    def display(self):
-        current=self.head
-        while current:
-            print(current.val,end='->')
-            current=current.next
-        print(None)
 
-c=LinkedList()
-for i in range(10):
-    c.insert(i,i*i)
-c.display()
-
-def get_fk(x:LinkedList,k:int)-> ListNode:
-    if k<=0:
-        return None
-    fast,slow=x.head,x.head
-    for _ in range(k):
-        if fast is None:
+    #这个函数最后得到了 nowNode ，我们读函数可以知道，这个nowNode其实就是root，于是我们还需要一个函数去给root赋值为这个nowNode
+    def Create(self,a,size,nodeid):
+        if nodeid>=size or a[nodeid]==None:
             return None
-        fast=fast.next
-    while fast:
-        fast=fast.next
-        slow=slow.next
-    return slow
+        nowNode=self.GetTreeNode(nodeid)
+        nowNode.val=a[nodeid]
+        nowNode.left=self.Create(a,size,nodeid*2)
+        nowNode.right=self.Create(a,size,nodeid*2+1)
+        return nowNode
+    
+    def CreateTree(self,a):
+        self.root=self.Create(a,len(a),1)
 
-print(get_fk(c,3).val)
+    #前序遍历
+    def preOrder(self,node):
+        if node:
+            self.visit(node)
+            self.preOrder(node.left)
+            self.preOrder(node.right)
+    
+    #这个函数主要是不让成员变量在类外暴露出来，不需要传参
+    def preOrderTree(self):
+        self.preOrder(self.root)
+        print(' ')
+    
+    #中序遍历
+    def inOrder(self,node):
+        if node:
+            self.inOrder(node.left)
+            self.visit(node)
+            self.inOrder(node.right)
+    
+    def inOrderTree(self):
+        self.inOrder(self.root)
+        print(' ')
+
+    #后序遍历
+    def postOrder(self,node):
+        if node:
+            self.postOrder(node.left)
+            self.postOrder(node.right)
+            self.visit(node)
+    
+    def postOrderTree(self):
+        self.postOrder(self.root)
+        print(' ')
+
+
+
